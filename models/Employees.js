@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import Department from "./Department.js";
 
 const EmployeesSchema = new mongoose.Schema({
@@ -20,7 +20,7 @@ const EmployeesSchema = new mongoose.Schema({
     required: true,
   },
   code_department: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: "Department",
   },

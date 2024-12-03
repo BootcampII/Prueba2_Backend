@@ -6,6 +6,6 @@ router.get("/getEmployees", employeeControllers.getEmployees);
 router.get("/getEmployeeById/:id", employeeControllers.getEmployeeById);
 router.post("/createEmployee", employeeControllers.createEmployee);
 router.patch("/updateEmployee/:id", employeeControllers.updateEmployee);
-router.delete("/deleteEmployee/:id", employeeControllers, deleteEmployee);
+router.delete("/deleteEmployee/:id", employeeControllers.deleteEmployee);
 
-module.exports = router;
+export default router;

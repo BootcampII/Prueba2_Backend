@@ -1,8 +1,7 @@
 import express from "express";
-const Router = express.Router();
+const router = express.Router();
+import employees from "./employeeRoutes.js";
 
-import Employees from "./EmployeeRoutes";
+router.use("/api", employees);
 
-Router.use("/api", Employees);
-
-export default Router;
+export default router;

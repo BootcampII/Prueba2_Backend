@@ -3,11 +3,12 @@ process.loadEnvFile();
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("Conectado a MongoDB");
   } catch (err) {
     console.log(err);
+    process.exit(1);
   }
 };
 
-module.exports = connectDB;
+export default connectDB;

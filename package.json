@@ -10,5 +10,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "express-validator": "^7.2.0",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "babel-jest": "^29.7.0"
+  }
 }

@@ -1,93 +1,89 @@
 import Department from "../models/Department.js";
 
 const createDepartment = async (req, res) => {
-  const { codeDepartment, name } = req.body;
+  const { codeDepartment, nameDepartment } = req.body;
   try {
-    const department = await Department.findOne({ codeDepartment });
-    if (department) {
-      return res
-        .status(400)
-        .json({ ok: false, msg: "El departamento ya existe" });
-    }
     const newDepartment = new Department({
-      codeDepartment: codeDepartment,
-      name: name,
+      codeDepartment,
+      nameDepartment,
     });
     await newDepartment.save();
-    return res.status(201).json({
-      ok: true,
-      msg: "Departamento creado correctamente",
+    res.status(201).json({
+      message: "Departamento creado con éxito",
+      departamento: newDepartment,
     });
-  } catch (err) {
-    console.log(err);
-    return res
-      .status(500)
-      .json({ ok: false, msg: "Error al crear departamento" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al crear el departamento", error });
   }
 };
 
 const getDepartments = async (req, res) => {
   try {
-    const departments = await Department.find();
-    return res.status(200).json({ ok: true, departments });
-  } catch (err) {
-    return res
+    const departamentos = await Department.find();
+    res.status(200).json(departamentos);
+  } catch (error) {
+    res
       .status(500)
-      .json({ ok: false, message: "Error al obtener departamentos" });
+      .json({ message: "Error al obtener los departamentos", error });
   }
 };
 
 const getDepartmentById = async (req, res) => {
+  const { codeDepartment } = req.params;
   try {
-    const department = await Department.findById(req.params.id);
-    if (!department) {
-      return res
-        .status(404)
-        .json({ message: "No se encontro el departamento" });
+    const departamento = await Department.findOne({
+      codeDepartment: codeDepartment,
+    });
+    if (!departamento) {
+      return res.status(404).json({ message: "Departamento no encontrado" });
     }
-    return res.status(200).json({ ok: true, msg: "departamento encontrado" });
-  } catch (err) {
-    return res
+    res.status(200).json(departamento);
+  } catch (error) {
+    res
       .status(500)
-      .json({ ok: false, msg: "Error al obtener departamento" });
-    console.log(err);
+      .json({ message: "Error al obtener el departamento", error });
   }
 };
-
 const updateDepartment = async (req, res) => {
+  const { codeDepartment } = req.params;
+  const { nameDepartment } = req.body;
   try {
-    const { id, name } = req.body;
-    const department = await Department.findById(id);
-    if (!department) {
-      return res
-        .status(404)
-        .json({ ok: false, msg: "No se encontro el departamento" });
+    const departamentoActualizado = await Department.findOneAndUpdate(
+      { codeDepartment: codeDepartment },
+      { nameDepartment },
+      { new: true }
+    );
+    if (!departamentoActualizado) {
+      return res.status(404).json({ message: "Departamento no encontrado" });
     }
-    department.name = name || department.name;
-    await department.save();
-    return res.status(200).json({ ok: true, msg: "Departamento actualizado" });
-  } catch (err) {
-    return res
+    res.status(200).json({
+      message: "Departamento actualizado con éxito",
+      departamento: departamentoActualizado,
+    });
+  } catch (error) {
+    res
       .status(500)
-      .json({ ok: false, msg: "Error al actualizar departamento" });
+      .json({ message: "Error al actualizar el departamento", error });
   }
 };
 
 const deleteDepartment = async (req, res) => {
+  const { codeDepartment } = req.params;
   try {
-    const { id } = req.params;
-    const department = await Department.findByIdAndDelete(id);
-    if (!department) {
-      return res
-        .status(404)
-        .json({ ok: false, msg: "No se encontro el departamento" });
+    const departamentoEliminado = await Department.findOneAndDelete({
+      codeDepartment: codeDepartment,
+    });
+    if (!departamentoEliminado) {
+      return res.status(404).json({ message: "Departamento no encontrado" });
     }
-    await department.remove();
-    return res.status(200).json({ ok: true, msg: "Departamento eliminado" });
-  } catch (err) {
-    return res
+    res.status(200).json({
+      message: "Departamento eliminado con éxito",
+      departamento: departamentoEliminado,
+    });
+  } catch (error) {
+    res
       .status(500)
-      .json({ ok: false, msg: "Error al eliminar departamento" });
+      .json({ message: "Error al eliminar el departamento", error });
   }
 };
 

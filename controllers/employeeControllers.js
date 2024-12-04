@@ -1,19 +1,26 @@
+import Department from "../models/Department.js";
 import Employees from "../models/Employees.js";
 
 const createEmployee = async (req, res) => {
-  const { codeEmployee, name, lastName1, lastName2, code_department } =
-    req.body;
+  const { codeEmployee, name, lastName1, lastName2, codeDepartment } = req.body;
   try {
     const employee = await Employees.findOne({ codeEmployee });
     if (employee) {
       return res.status(400).json({ ok: false, msg: "El empleado ya existe" });
+    }
+
+    const departement = await Department.findOne({ codeDepartment });
+    if (!departement) {
+      return res
+        .status(400)
+        .json({ ok: false, msg: "El departamento no existe" });
     }
     const newEmployee = new Employees({
       codeEmployee: codeEmployee,
       name: name,
       lastName1: lastName1,
       lastName2: lastName2,
-      code_department: code_department,
+      codeDepartment: departement._id,
     });
     await newEmployee.save();
     return res.status(201).json({
@@ -28,7 +35,10 @@ const createEmployee = async (req, res) => {
 
 const getEmployees = async (req, res) => {
   try {
-    const employees = await Employees.find();
+    const employees = await Employees.find().populate({
+      path: "codeDepartment",
+      select: "nameDepartment codeDepartment",
+    });
     return res.status(200).json({ ok: true, employees });
   } catch (err) {
     return res
@@ -54,7 +64,7 @@ const getEmployeeById = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
   try {
-    const { id, name, lastName1, lastName2, code_department } = req.body;
+    const { id, name, lastName1, lastName2, codeDepartment } = req.body;
     const employee = await Employees.findById(id);
     if (!employee) {
       return res
@@ -64,7 +74,7 @@ const updateEmployee = async (req, res) => {
     employee.name = name || employee.name;
     employee.lastName1 = lastName1 || employee.lastName1;
     employee.lastName2 = lastName2 || employee.lastName2;
-    employee.code_department = code_department || employee.code_department;
+    employee.codeDepartment = codeDepartment || employee.codeDepartment;
     await employee.save();
     return res.status(200).json({ ok: true, msg: "Empleado actualizado" });
   } catch (err) {

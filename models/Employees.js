@@ -19,10 +19,10 @@ const EmployeesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  code_department: {
+  codeDepartment: {
     type: Schema.Types.ObjectId,
-    required: true,
     ref: "Department",
+    required: true,
   },
 });
 
